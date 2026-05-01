@@ -3,7 +3,6 @@ import type { ProfileLink, ProfileLinkVariant, Publication, PublicationSubtopicI
 import {
   aboutParagraphs,
   allPublications,
-  blogPosts,
   education,
   heroFocus,
   internships,
@@ -212,21 +211,13 @@ export default function App() {
   const [activeSubtopic, setActiveSubtopic] = useState<PublicationSubtopicId | 'All'>('All')
   const [photoEasterEgg, setPhotoEasterEgg] = useState<{ x: number; y: number } | null>(null)
   const [researchIndex, setResearchIndex] = useState(0)
-  const [blogIndex, setBlogIndex] = useState(0)
 
   const researchStatements = useMemo(() => [heroFocus], [])
-  const blogEntries = useMemo(() => (blogPosts.length > 0 ? blogPosts : []), [])
 
   const activeResearch = researchStatements[researchIndex % researchStatements.length]
-  const activeBlog = blogEntries.length > 0 ? blogEntries[blogIndex % blogEntries.length] : null
 
   const stepResearch = (delta: number) => {
     setResearchIndex((current) => (current + delta + researchStatements.length) % researchStatements.length)
-  }
-
-  const stepBlog = (delta: number) => {
-    if (blogEntries.length === 0) return
-    setBlogIndex((current) => (current + delta + blogEntries.length) % blogEntries.length)
   }
 
   const filteredPublications = useMemo(() => {
@@ -269,7 +260,7 @@ export default function App() {
           <a href="#all">Publications</a>
           <a href="#news">News</a>
           <a href="#education">Education</a>
-          <a href="#blog">Blog (coming soon)</a>
+          <a href="#blog">Blog</a>
         </nav>
       </header>
 
@@ -576,32 +567,11 @@ export default function App() {
 
         <section id="blog" className="section">
           <div className="glass-card prose-card">
-            <div className="carousel-head">
-              <div className="section-heading section-heading--inline">
-                <p className="section-kicker">Blog</p>
-                <h2 className="section-title">Blog</h2>
-              </div>
-              <div className="carousel-controls" aria-label="Blog controls">
-                <button type="button" className="carousel-btn" onClick={() => stepBlog(-1)} aria-label="Previous blog">
-                  <span aria-hidden>‹</span>
-                </button>
-                <button type="button" className="carousel-btn" onClick={() => stepBlog(1)} aria-label="Next blog">
-                  <span aria-hidden>›</span>
-                </button>
-              </div>
+            <div className="section-heading section-heading--inline">
+              <p className="section-kicker">Blog</p>
+              <h2 className="section-title">Blog</h2>
             </div>
-            {activeBlog ? (
-              <article className="blog-carousel-card">
-                <p className="section-note">{activeBlog.date}</p>
-                <h3>{activeBlog.title}</h3>
-                <p>{activeBlog.excerpt}</p>
-                <a href={activeBlog.href} target="_blank" rel="noopener noreferrer">
-                  Read more
-                </a>
-              </article>
-            ) : (
-              <p className="section-note blog-coming-soon-lede">Updates, notes, and research highlights will appear here.</p>
-            )}
+            <p className="section-note blog-coming-soon-lede">TBD</p>
           </div>
         </section>
 

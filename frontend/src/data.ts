@@ -24,16 +24,6 @@ export type Publication = {
   award?: string
 }
 
-export type BlogPost = {
-  title: string
-  date: string
-  category: string
-  excerpt: string
-  href: string
-  image?: string
-  imageAlt?: string
-}
-
 export type EducationItem = {
   period: string
   school: string
@@ -185,8 +175,8 @@ const publicationSourceRaw: Omit<Publication, 'subtopics'>[] = [
     title: 'SciVideoBench: Benchmarking Scientific Video Reasoning in Large Multimodal Models',
     authors:
       'Andong Deng, Taojiannan Yang, Shoubin Yu, Lincoln Spencer, Mohit Bansal, Chen Chen, Serena Yeung-Levy, Xiaohan Wang',
-    venue: 'Preprint',
-    year: 2025,
+    venue: 'ICML 2026',
+    year: 2026,
     summary: 'Benchmark for advanced scientific video reasoning in LMMs.',
     tags: ['Benchmark', 'Video'],
     links: [
@@ -571,33 +561,6 @@ export const selectedPublications: Publication[] = SELECTED_WORK_TITLES.map((tit
   return found
 })
 
-export const blogPosts: BlogPost[] = [
-  {
-    title: 'VisionCoach (preprint)',
-    date: '2026',
-    category: 'Preprint',
-    excerpt: 'Reinforcing grounded video reasoning via visual-perception prompting (RL + self-distillation).',
-    href: 'https://arxiv.org/abs/2603.14659',
-    image: '/projects/visioncoach.png',
-  },
-  {
-    title: 'Adaptive Visual TTS with World Models (preprint)',
-    date: '2026',
-    category: 'Preprint',
-    excerpt: 'When and how much to imagine for visual spatial reasoning—AVIC framework.',
-    href: 'https://arxiv.org/abs/2602.08236',
-    image: '/projects/avic.png',
-  },
-  {
-    title: 'Video-MSG (preprint)',
-    date: '2025',
-    category: 'Preprint',
-    excerpt: 'Training-free guidance for T2V via multimodal planning and structured noise initialization.',
-    href: 'https://arxiv.org/abs/2504.08641',
-    image: '/projects/video-msg.png',
-  },
-]
-
 export type NewsItem = {
   /** Shown as the date badge (e.g. 2026.02). */
   date: string
@@ -608,6 +571,11 @@ export type NewsItem = {
 }
 
 export const news: NewsItem[] = [
+  {
+    date: '2026.04',
+    venue: 'ICML 2026',
+    text: '1 paper accepted.',
+  },
   {
     date: '2026.04',
     venue: 'CVPR 2026',
