@@ -47,29 +47,29 @@ export type ProfileLink = {
 }
 
 export const profile = {
-  photo: '/shoubin.jpg',
-  photoAlt: 'Shoubin Yu',
-  name: 'Shoubin Yu',
-  role: 'Ph.D. Student in Computer Science\nUNC Chapel Hill',
+  photo: '/akash.jpg',
+  photoAlt: 'Akash Ghosh',
+  name: 'Akash Ghosh',
+  role: 'Research Scholar at IIT Patna',
   tagline:
-    'Generative multimodal AI, video-language understanding & generation, AI safety, and efficient training and scaled inference for large models.',
-  location: 'North Carolina, US',
-  email: 'shoubin@cs.unc.edu',
+    'NLP, Multimodal AI, AI Safety, GenAI4Science.',
+  location: 'Patna, India',
+  email: 'akashghosh.ag90@gmail.com',
   bio: `Fourth-year PhD student at MURGe-Lab (UNC-NLP) at UNC Chapel Hill, advised by Prof. Mohit Bansal. B.Eng. from Shanghai Jiao Tong University (2022).`,
   contactBlurb: `I'm always happy to share ideas, discussion, and collaboration with people from diverse backgrounds—feel free to reach out.`,
   links: [
     {
       label: 'Google Scholar',
-      href: 'https://scholar.google.com/citations?user=UqC5AoMAAAAJ&hl=en&oi=ao',
+      href: 'https://scholar.google.com/citations?user=NWc6Pw8AAAAJ&hl=en',
       variant: 'scholar',
     },
-    { label: 'GitHub', href: 'https://github.com/Yui010206', variant: 'github' },
+    { label: 'GitHub', href: 'https://github.com/AkashGhosh', variant: 'github' },
     {
       label: 'CV',
-      href: 'https://drive.google.com/file/d/1PmaeZfLzzoqp-3PCBwAkp29_JAWuJaVE/view?usp=sharing',
+      href: 'https://drive.google.com/file/d/1AXqC8UvGvhttWgS29wCXPBrXq4VftkNg/view?usp=sharing',
       variant: 'cv',
     },
-    { label: 'Email', href: 'mailto:shoubin@cs.unc.edu', variant: 'email' },
+    { label: 'Email', href: 'mailto:akashghosh.ag90@gmail.com', variant: 'email' },
     { label: 'X (Twitter)', href: 'https://x.com/shoubin621', variant: 'twitter' },
   ] satisfies ProfileLink[],
 }
