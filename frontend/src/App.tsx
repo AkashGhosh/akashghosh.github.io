@@ -245,13 +245,13 @@ export default function App() {
           style={{ left: photoEasterEgg.x, top: photoEasterEgg.y }}
           aria-hidden
         >
-          {'Yui & Piepie'}
+          {'Akash'}
         </div>
       ) : null}
 
       <header className="site-header">
         <a className="brand" href="#top">
-          Shoubin Yu
+          Akash Ghosh
         </a>
         <nav>
           <a href="#research">Current Research statement</a>
