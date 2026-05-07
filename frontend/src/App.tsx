@@ -79,7 +79,7 @@ function PublicationTitle({ title, links }: { title: string; links: Publication[
   )
 }
 
-/** Highlights "Shoubin Yu" / "Shoubin Yu*" in author strings (case-insensitive). */
+/** Highlights "Akash Ghosh" / "Akash Ghosh*" in author strings (case-insensitive). */
 function LinkIcon({ variant }: { variant: ProfileLinkVariant }) {
   const common = { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', 'aria-hidden': true as const }
   switch (variant) {
@@ -187,11 +187,11 @@ function MarkedText({ text, papersSyntax = false }: { text: string; papersSyntax
 }
 
 function AuthorsLine({ text }: { text: string }) {
-  const parts = text.split(/(Shoubin Yu\*?)/gi)
+  const parts = text.split(/(Akash Ghosh\*?)/gi)
   return (
     <p className="authors">
       {parts.map((part, i) =>
-        /^Shoubin Yu\*?$/i.test(part) ? (
+        /^Akash Ghosh\*?$/i.test(part) ? (
           <span key={i} className="author-self">
             {part}
           </span>

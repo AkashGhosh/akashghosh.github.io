@@ -47,7 +47,7 @@ export type ProfileLink = {
 }
 
 export const profile = {
-  photo: '/akash.jpg',
+  photo: '/akash.jpeg',
   photoAlt: 'Akash Ghosh',
   name: 'Akash Ghosh',
   role: 'Research Scholar at IIT Patna',
