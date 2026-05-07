@@ -6,9 +6,9 @@
 # `jekyll serve`. If you change this file, please restart the server process.
 
 # Site Settings
-title                    : "Shoubin Yu"
-description              : "Ph.D. Student in Computer Science"
-repository               : "Yui010206/Yui010206.github.io"
+title                    : "Akash Ghosh"
+description              : "Research Scholar, IIT Patna"
+repository               : "AkashGhosh/akashghosh.github.io"
 google_scholar_stats_use_cdn : false
 
 # google analytics
@@ -21,13 +21,13 @@ baidu_site_verification  :  # get baidu_site_verification from https://ziyuan.ba
 
 # Site Author
 author:
-  name             : "Shoubin Yu"
-  avatar           : "images/shoubin.jpg"
-  bio              : "UNC, Chapel Hill"
-  location         : "North Carolina, US"
+  name             : "Akash Ghosh"
+  avatar           : "images/akash.jpeg"
+  bio              : "Research Scholar, IIT Patna"
+  location         : "Patna, India"
   employer         :
-  pubmed           : 
-  googlescholar    : "https://scholar.google.com/citations?user=UqC5AoMAAAAJ&hl=en&oi=ao"
+  pubmed           :
+  googlescholar    : "https://scholar.google.com/citations?user=NWc6Pw8AAAAJ&hl=en"
   email            : 
   researchgate     :  # e.g., "https://www.researchgate.net/profile/yourprofile"
   uri              :
@@ -37,13 +37,13 @@ author:
   flickr           :
   facebook         :
   foursquare       :
-  github           : "Yui010206"
+  github           : "AkashGhosh"
   google_plus      :
   keybase          :
   instagram        :
   impactstory      : # e.g., "https://profiles.impactstory.org/u/xxxx-xxxx-xxxx-xxxx"
   lastfm           :
-  linkedin         : # e.g., "linkedin username"
+  linkedin         : "akash-ghosh-4b199811a"
   dblp             : # e.g., "https://dblp.org/pid/xx/xxxx.html"
   orcid            : # e.g., "https://orcid.org/xxxx"
   pinterest        :
