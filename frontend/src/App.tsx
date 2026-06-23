@@ -1,13 +1,11 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import type { ProfileLink, ProfileLinkVariant, Publication, PublicationSubtopicId } from './data'
+import type { BioInst, ProfileLink, ProfileLinkVariant, Publication } from './data'
 import {
-  aboutParagraphs,
   allPublications,
   education,
   heroFocus,
   internships,
   news,
-  PUBLICATION_SUBTOPICS,
   profile,
   selectedPublications,
   serviceAndTalk,
@@ -134,6 +132,14 @@ function LinkIcon({ variant }: { variant: ProfileLinkVariant }) {
           />
         </svg>
       )
+    case 'linkedin':
+      return (
+        <svg {...common} fill="currentColor">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+          <rect x="2" y="9" width="4" height="12" />
+          <circle cx="4" cy="4" r="2" />
+        </svg>
+      )
     default:
       return null
   }
@@ -187,30 +193,45 @@ function MarkedText({ text, papersSyntax = false }: { text: string; papersSyntax
 }
 
 function AuthorsLine({ text }: { text: string }) {
-  const parts = text.split(/(Akash Ghosh\*?)/gi)
+  const hasEqualContrib = text.includes('*')
+  const parts = text.split(/(\w[^,*]*(?:\s\w[^,*]*)?\*?)/g).filter(Boolean)
+
+  const renderName = (raw: string, i: number) => {
+    const isStar = raw.endsWith('*')
+    const name = isStar ? raw.slice(0, -1) : raw
+    const isSelf = /^akash ghosh$/i.test(name.trim())
+    return (
+      <span key={i} className={isSelf ? 'author-self' : undefined}>
+        {name}{isStar && <sup>*</sup>}
+      </span>
+    )
+  }
+
   return (
-    <p className="authors">
-      {parts.map((part, i) =>
-        /^Akash Ghosh\*?$/i.test(part) ? (
-          <span key={i} className="author-self">
-            {part}
-          </span>
-        ) : (
-          <span key={i}>{part}</span>
-        )
+    <div className="authors-block">
+      <p className="authors">
+        {parts.map((part, i) => {
+          if (/^[,\s]+$/.test(part)) return <span key={i}>{part}</span>
+          return renderName(part, i)
+        })}
+      </p>
+      {hasEqualContrib && (
+        <p className="equal-contrib"><sup>*</sup> Equal contribution</p>
       )}
-    </p>
+    </div>
   )
 }
 
-type ArchiveView = 'year' | 'topic'
-
 export default function App() {
-  const [archiveView, setArchiveView] = useState<ArchiveView>('year')
   const [activeYear, setActiveYear] = useState('All')
-  const [activeSubtopic, setActiveSubtopic] = useState<PublicationSubtopicId | 'All'>('All')
   const [photoEasterEgg, setPhotoEasterEgg] = useState<{ x: number; y: number } | null>(null)
   const [researchIndex, setResearchIndex] = useState(0)
+  const [isDark, setIsDark] = useState(() => localStorage.getItem('theme') === 'dark')
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light')
+    localStorage.setItem('theme', isDark ? 'dark' : 'light')
+  }, [isDark])
 
   const researchStatements = useMemo(() => [heroFocus], [])
 
@@ -221,13 +242,9 @@ export default function App() {
   }
 
   const filteredPublications = useMemo(() => {
-    if (archiveView === 'year') {
-      if (activeYear === 'All') return allPublications
-      return allPublications.filter((p) => String(p.year) === activeYear)
-    }
-    if (activeSubtopic === 'All') return allPublications
-    return allPublications.filter((p) => p.subtopics.includes(activeSubtopic))
-  }, [archiveView, activeYear, activeSubtopic])
+    if (activeYear === 'All') return allPublications
+    return allPublications.filter((p) => String(p.year) === activeYear)
+  }, [activeYear])
 
   const archiveGroups = useMemo(
     () => groupPublicationsByYearAndVenue(filteredPublications),
@@ -255,25 +272,24 @@ export default function App() {
         </a>
         <nav>
           <a href="#research">Current Research statement</a>
-          <a href="#about">About</a>
           <a href="#selected">Selected work</a>
           <a href="#all">Publications</a>
           <a href="#news">News</a>
           <a href="#education">Education</a>
-          <a href="#blog">Blog</a>
         </nav>
+        <button
+          type="button"
+          className="theme-toggle"
+          onClick={() => setIsDark((d) => !d)}
+          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {isDark ? 'Light Mode ☀️' : 'Dark Mode 🌙'}
+        </button>
       </header>
 
       <main>
         <section className="hero section">
           <div className="hero-main">
-            <div className="hero-copy">
-              <h1>{profile.name}</h1>
-              <h2 className="hero-role">{profile.role}</h2>
-              <p className="tagline">{profile.tagline}</p>
-              <p className="bio">{profile.bio}</p>
-            </div>
-
             <div
               className="hero-panel"
               onMouseMove={(e) => setPhotoEasterEgg({ x: e.clientX, y: e.clientY })}
@@ -292,10 +308,25 @@ export default function App() {
               </div>
             </div>
 
-            <div className="cta-row hero-cta-row">
-              {profile.links.map((link) => (
-                <ProfileLinkButton key={link.label} link={link} />
+            <div className="hero-copy">
+              <h1>{profile.name}</h1>
+              <h2 className="hero-role">{profile.role}</h2>
+              {profile.bio.map((paragraph, index) => (
+                <p key={index} className="bio-para">
+                  {paragraph.map((token, j) =>
+                    typeof token === 'string' ? (
+                      <span key={j}>{token}</span>
+                    ) : (
+                      <BioInstitution key={j} inst={token} />
+                    )
+                  )}
+                </p>
               ))}
+              <div className="cta-row hero-cta-row">
+                {profile.links.map((link) => (
+                  <ProfileLinkButton key={link.label} link={link} />
+                ))}
+              </div>
             </div>
           </div>
 
@@ -331,40 +362,23 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section about-news-section">
-          <div className="about-news-layout">
-            <div id="news" className="glass-card news-card news-card--split">
-              <div className="section-heading section-heading--inline">
-                <p className="section-kicker">Updates</p>
-                <h2 className="section-title">News</h2>
-              </div>
-              <div className="news-scroll">
-                <ul className="news-list">
-                  {news.map((item) => (
-                    <li key={`${item.date}-${item.venue ?? ''}-${item.text}`} className="news-item">
-                      <span className="news-date">{item.date}</span>
-                      <div className="news-item__main">
-                        {item.venue ? <span className="news-venue">{item.venue}</span> : null}
-                        <p className="news-text">{item.text}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+        <section id="news" className="section about-news-section">
+          <div className="glass-card news-card">
+            <div className="section-heading section-heading--inline">
+              <p className="section-kicker">Updates</p>
+              <h2 className="section-title">News</h2>
             </div>
-
-            <div id="about" className="glass-card prose-card about-prose-card">
-              <div className="section-heading section-heading--inline">
-                <p className="section-kicker">About</p>
-                <h2 className="section-title">About Me</h2>
-              </div>
-              <div className="about-prose-body">
-                {aboutParagraphs.map((paragraph, i) => (
-                  <p key={i}>
-                    <MarkedText text={paragraph} />
-                  </p>
+            <div className="news-scroll">
+              <ul className="news-list">
+                {news.map((item) => (
+                  <li key={`${item.date}-${item.venue ?? ''}-${item.text}`} className="news-item">
+                    <span className="news-date-inline">{item.date}</span>
+                    {': '}
+                    {item.venue ? <><span className="news-venue-inline">{item.venue}</span>{' — '}</> : null}
+                    {item.text}
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           </div>
         </section>
@@ -417,65 +431,23 @@ export default function App() {
           <div className="section-header archive-header">
             <div className="section-heading">
               <p className="section-kicker">Archive</p>
-              <h2 className="section-title">All publications</h2>
-            </div>
-            <div className="archive-view-switch" role="tablist" aria-label="Browse publications">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={archiveView === 'year'}
-                className={archiveView === 'year' ? 'archive-tab active' : 'archive-tab'}
-                onClick={() => setArchiveView('year')}
-              >
-                By year
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={archiveView === 'topic'}
-                className={archiveView === 'topic' ? 'archive-tab active' : 'archive-tab'}
-                onClick={() => setArchiveView('topic')}
-              >
-                By topic
-              </button>
+              <h2 className="section-title">All papers</h2>
             </div>
           </div>
 
           <div className="archive-filters">
-            {archiveView === 'year' ? (
-              <div className="filter-row" role="group" aria-label="Filter by year">
-                {years.map((year) => (
-                  <button
-                    key={year}
-                    type="button"
-                    className={year === activeYear ? 'filter active' : 'filter'}
-                    onClick={() => setActiveYear(year)}
-                  >
-                    {year}
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="filter-row" role="group" aria-label="Filter by sub-topic">
+            <div className="filter-row" role="group" aria-label="Filter by year">
+              {years.map((year) => (
                 <button
+                  key={year}
                   type="button"
-                  className={activeSubtopic === 'All' ? 'filter active' : 'filter'}
-                  onClick={() => setActiveSubtopic('All')}
+                  className={year === activeYear ? 'filter active' : 'filter'}
+                  onClick={() => setActiveYear(year)}
                 >
-                  All topics
+                  {year}
                 </button>
-                {PUBLICATION_SUBTOPICS.map((st) => (
-                  <button
-                    key={st.id}
-                    type="button"
-                    className={activeSubtopic === st.id ? 'filter active' : 'filter'}
-                    onClick={() => setActiveSubtopic(st.id)}
-                  >
-                    {st.label}
-                  </button>
-                ))}
-              </div>
-            )}
+              ))}
+            </div>
           </div>
 
           <div className="glass-card archive-card">
@@ -565,15 +537,6 @@ export default function App() {
           </div>
         </section>
 
-        <section id="blog" className="section">
-          <div className="glass-card prose-card">
-            <div className="section-heading section-heading--inline">
-              <p className="section-kicker">Blog</p>
-              <h2 className="section-title">Blog</h2>
-            </div>
-            <p className="section-note blog-coming-soon-lede">TBD</p>
-          </div>
-        </section>
 
         <section className="section">
           <div className="glass-card prose-card service-card">
@@ -642,6 +605,23 @@ function HeroPhoto({ src, alt }: { src: string; alt: string }) {
       alt={alt}
       onError={() => setActiveSrc((current) => (current === HEADSHOT_FALLBACK ? current : HEADSHOT_FALLBACK))}
     />
+  )
+}
+
+function BioInstitution({ inst }: { inst: BioInst }) {
+  const [showLogo, setShowLogo] = useState(!!inst.logo)
+  return (
+    <span className="bio-inst">
+      {showLogo && inst.logo && (
+        <img
+          src={inst.logo}
+          alt=""
+          className="bio-inst-logo"
+          onError={() => setShowLogo(false)}
+        />
+      )}
+      <span className="bio-inst-name">{inst.name}</span>
+    </span>
   )
 }
 
